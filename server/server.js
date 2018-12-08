@@ -2,9 +2,14 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const {mongoose} = require('./db/mongoose')
 const {Pet} = require('./models/Pet')
-const port = 3000
+const port = 8081
 const app = express()
 app.use(bodyParser.json())
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Content-Type')
+  next()
+})
 app.post('/pet', (req, res) => {
   const newPet = new Pet({
     petType: req.body.petType,
@@ -17,6 +22,11 @@ app.post('/pet', (req, res) => {
     res.send(result)
   }, (err) => {
     res.status(400).send(err)
+  })
+})
+app.get('/pet', (req, res) => {
+  Pet.find().then((pets) => {
+    res.send({pets})
   })
 })
 app.listen(port, () => console.log(`Server is started on port: ${port}!`))
