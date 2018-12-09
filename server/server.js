@@ -29,5 +29,12 @@ app.get('/pet', (req, res) => {
     res.send({pets})
   })
 })
+
+app.get('/pet/:id', (req, res) => {
+  console.log(req.params.id)
+  Pet.findOneAndDelete({_id: req.params.id}).then((pet) => {
+    res.send({pet})
+  })
+})
 app.listen(port, () => console.log(`Server is started on port: ${port}!`))
 
