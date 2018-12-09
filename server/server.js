@@ -32,6 +32,12 @@ app.get('/pet', (req, res) => {
 
 app.get('/pet/:id', (req, res) => {
   console.log(req.params.id)
+  Pet.findById(req.params.id).then((pet) => {
+    res.send({pet})
+  })
+})
+app.get('/pet/delete/:id', (req, res) => {
+  console.log(req.params.id)
   Pet.findOneAndDelete({_id: req.params.id}).then((pet) => {
     res.send({pet})
   })
