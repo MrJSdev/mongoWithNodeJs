@@ -11,6 +11,9 @@ const Pet = mongoose.model('Pet', {
   },
   size: {
     type: String
+  },
+  updatedAt: {
+    type: Number
   }
 })
 

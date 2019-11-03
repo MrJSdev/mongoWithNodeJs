@@ -1,4 +1,5 @@
 const express = require('express')
+const _ = require('lodash')
 const bodyParser = require('body-parser')
 const {mongoose} = require('./db/mongoose')
 const {Pet} = require('./models/Pet')
@@ -7,6 +8,7 @@ const app = express()
 app.use(bodyParser.json())
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'POST,GET,DELETE,PATCH, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'Content-Type')
   next()
 })
@@ -42,5 +44,23 @@ app.get('/pet/delete/:id', (req, res) => {
     res.send({pet})
   })
 })
+app.patch('/pet/:id', (req, res) => {
+  const body = _.pick(req.body, ['color', 'size', 'petType'])
+  console.log(body)
+  body.updatedAt = new Date().getTime()
+
+  Pet.findOneAndUpdate({_id: req.params.id}, {
+    $set: body
+  }, {new: true}).then((result) => {
+    res.status(200).send(result)
+  })
+})
+// app.delete('/pet/all/delete', (req, res) => {
+//   console.log(req)
+//   res.send(req)
+//   Pet.findOneAndDelete({_id: req.body.}).then((pet) => {
+//     res.send({pet})
+//   })
+// })
 app.listen(port, () => console.log(`Server is started on port: ${port}!`))
 
